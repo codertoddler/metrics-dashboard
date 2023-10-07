@@ -38,8 +38,8 @@ jobs:
         name: Build and push front end
         uses: docker/build-push-action@v2
         with:
-          context: .
-          file: ./reference-app/frontend/Dockerfile
+          context: "{{defaultContext}}:reference-app/frontend"
+          file: Dockerfile
           platforms: linux/amd64
           push: true
           tags: kishore2eeesvu/frontend:latest
