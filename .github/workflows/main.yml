@@ -47,8 +47,8 @@ jobs:
         name: Build and push back end
         uses: docker/build-push-action@v2
         with:
-          context: .
-          file: ./reference-app/backend/Dockerfile
+          context: "{{defaultContext}}:reference-app/backend"
+          file: Dockerfile
           platforms: linux/amd64
           push: true
           tags: kishore2eeesvu/backend:latest
@@ -56,8 +56,8 @@ jobs:
         name: Build and push trial
         uses: docker/build-push-action@v2
         with:
-          context: .
-          file: ./reference-app/trial/Dockerfile
+          context: "{{defaultContext}}:reference-app/trial"
+          file: Dockerfile
           platforms: linux/amd64
           push: true
           tags: kishore2eeesvu/trial:latest
