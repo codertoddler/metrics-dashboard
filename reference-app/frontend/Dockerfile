@@ -6,6 +6,7 @@ FROM python:3.7-slim
 ENV APP_HOME /app
 WORKDIR $APP_HOME
 COPY . ./
+CMD ["ls", "-ll"]
 
 # Install production dependencies.
 RUN apt-get update && \
