@@ -12,9 +12,18 @@
 
 ## Describe SLO/SLI
 *TODO:* Describe, in your own words, what the SLIs are, based on an SLO of *monthly uptime* and *request response time*.
+The up time of the portal for June was 99.99%
+The down time of the portal for March was 0.03%
+The average latency for the 2nd quarter this year was 300 milliseconds
+The peak latency for September this year was 400 milliseconds
 
 ## Creating SLI metrics.
 *TODO:* It is important to know why we want to measure certain metrics for our customer. Describe in detail 5 metrics to measure these SLIs. 
+1. We can create an Events timeline overtime listing states of the portal like down, maintenance, suspended e.g. to visualize the up time
+2. We can create an Availability percentage trend to realize availability over a time span
+3. We can create a downtime history table to list down times over a time span
+4. We can create an Average response time [per hour for e.g.] metric to visualize the response time over a time period of several days or a month
+5. We can create a Peak response time [per hour for e.g.] metric to visualize the response time over a time period of several days or a month
 
 ## Create a Dashboard to measure our SLIs
 *TODO:* Create a dashboard to measure the uptime of the frontend and backend services We will also want to measure to measure 40x and 50x errors. Create a dashboard that show these values over a 24 hour period and take a screenshot.
