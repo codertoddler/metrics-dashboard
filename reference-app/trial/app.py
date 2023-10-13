@@ -58,33 +58,41 @@ def trace():
         return tag.sub("", text)
 
     with tracer.start_span("get-python-jobs") as span:
-        res = requests.get("https://jobs.github.com/positions.json?description=python")
+        res = requests.get("https://dummyjson.com/products", verify=False)
         span.log_kv({"event": "get jobs count", "count": len(res.json())})
         span.set_tag("jobs-count", len(res.json()))
 
         jobs_info = []
-        for result in res.json():
+        for result in res.json()["products"]:
+            print(result)
             jobs = {}
             with tracer.start_span("request-site") as site_span:
-                logger.info(f"Getting website for {result['company']}")
+                logger.info(f"Getting website for {result['brand']}")
                 try:
-                    jobs["description"] = remove_tags(result["description"])
-                    jobs["company"] = result["company"]
-                    jobs["company_url"] = result["company_url"]
-                    jobs["created_at"] = result["created_at"]
-                    jobs["how_to_apply"] = result["how_to_apply"]
-                    jobs["location"] = result["location"]
+                    #jobs["description"] = remove_tags(result["description"])
+                    #jobs["company"] = result["company"]
+                    #jobs["company_url"] = result["company_url"]
+                    #jobs["created_at"] = result["created_at"]
+                    #jobs["how_to_apply"] = result["how_to_apply"]
+                    #jobs["location"] = result["location"]
+                    #jobs["title"] = result["title"]
+                    #jobs["type"] = result["type"]
+                    #jobs["url"] = result["url"]
+                    
+                    jobs["id"] = result["id"]
                     jobs["title"] = result["title"]
-                    jobs["type"] = result["type"]
-                    jobs["url"] = result["url"]
-
+                    jobs["description"] = result["description"]
+                    jobs["price"] = result["price"]
+                    jobs["discountPercentage"] = result["discountPercentage"]
+                    jobs["rating"] = result["rating"]
+                    
                     jobs_info.append(jobs)
                     site_span.set_tag("http.status_code", res.status_code)
-                    site_span.set_tag("company-site", result["company"])
+                    site_span.set_tag("company-site", result["brand"])
                 except Exception:
-                    logger.error(f"Unable to get site for {result['company']}")
+                    logger.error(f"Unable to get site for {result['brand']}")
                     site_span.set_tag("http.status_code", res.status_code)
-                    site_span.set_tag("company-site", result["company"])
+                    site_span.set_tag("company-site", result["brand"])
 
     return jsonify(jobs_info)
 
