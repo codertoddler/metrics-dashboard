@@ -1,31 +1,9 @@
 from flask import Flask, render_template, request, jsonify
+
 import pymongo
 from flask_pymongo import PyMongo
 
-from jaeger_client import Config
-from jaeger_client.metrics.prometheus import PrometheusMetricsFactory
-from flask_opentracing import FlaskTracing
-
-# jaeger
-def tracerConfig():
-    config = Config(
-           config = {
-                'sampler': {
-                'type': 'const',
-                'param': 1,
-            },
-            'logging': True,
-        },
-        service_name="service_backend",
-        validate=True,
-        metrics_factory=PrometheusMetricsFactory(service_name_label="service_backend")
-    )
-    return config.initialize_tracer()
-
 app = Flask(__name__)
-
-jaegerTracer = tracerConfig()
-tracing = FlaskTracing(jaegerTracer, True, app)
 
 app.config["MONGO_DBNAME"] = "example-mongodb"
 app.config[
