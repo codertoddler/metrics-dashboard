@@ -19,8 +19,8 @@ def tracerConfig():
             'logging': True,
         },
         service_name="service_backend",
-        validate=True,
-        metrics_factory=PrometheusMetricsFactory(service_name_label="service_backend")
+        validate=True
+        #metrics_factory=PrometheusMetricsFactory(service_name_label="service_backend")
     )
     return config.initialize_tracer()
 
