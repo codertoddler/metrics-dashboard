@@ -18,21 +18,6 @@ from opentelemetry.exporter.jaeger.thrift import JaegerExporter
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.shim.opentracing_shim import create_tracer
 
-trace.set_tracer_provider(
-TracerProvider(
-        resource=Resource.create({SERVICE_NAME: "service_backend"})
-    )
-)
-#tracer = trace.get_tracer(__name__)
-jaeger_exporter = JaegerExporter(
-    agent_host_name='localhost',
-    agent_port=6831,
-)
-
-span_processor = BatchSpanProcessor(jaeger_exporter)
-
-trace.get_tracer_provider().add_span_processor(span_processor)
-
 # jaeger
 #def tracerConfig():
 #    config = Config(
@@ -63,6 +48,18 @@ logger = logging.getLogger(__name__)
 
 #jaegerTracer = tracerConfig()
 #tracing = FlaskTracer(jaegerTracer, True, app)
+trace.set_tracer_provider(
+TracerProvider(
+        resource=Resource.create({SERVICE_NAME: "service_backend"})
+    )
+)
+#tracer = trace.get_tracer(__name__)
+jaeger_exporter = JaegerExporter(
+    agent_host_name='localhost',
+    agent_port=6831,
+)
+span_processor = BatchSpanProcessor(jaeger_exporter)
+trace.get_tracer_provider().add_span_processor(span_processor)
 shim = create_tracer(trace)
 tracing = FlaskTracer(shim, True, app)
 
