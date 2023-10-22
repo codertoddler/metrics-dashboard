@@ -28,10 +28,10 @@ def tracerConfig():
                 'param': 1,
             },
             'logging': True,
- #           'local_agent': {
- #                'reporting_host': 'jaeger-agent.default.svc.cluster.local',
- #                'reporting_port': 6831,
-  #              }
+            'local_agent': {
+                 'reporting_host': 'simplest-agent.observability.svc.cluster.local',
+                 'reporting_port': 6831,
+               }
         },
         service_name="service_backend",
         validate=True,
