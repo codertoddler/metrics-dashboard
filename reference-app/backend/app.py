@@ -52,6 +52,7 @@ logger = logging.getLogger(__name__)
 
 jaegerTracer = tracerConfig()
 tracing = FlaskTracer(jaegerTracer, True, app)
+
 #trace.set_tracer_provider(
 #TracerProvider(
 #        resource=Resource.create({SERVICE_NAME: "service_backend"})
@@ -78,6 +79,10 @@ mongo = PyMongo(app)
 
 @app.route("/")
 def homepage():
+    with jaegerTracer.start_span('Parent Span') as span:
+        span.log_kv({'event': 'This is parent span in home page'})
+        with jaegerTracer.start_span('Child Span', child_of=span) as child_span:
+            child_span.log_kv({'event': 'This is child span in home page'})
     return "Hello World"
 
 
