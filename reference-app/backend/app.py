@@ -16,12 +16,14 @@ from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.resources import SERVICE_NAME, Resource
 from opentelemetry.exporter.jaeger.thrift import JaegerExporter
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
+from opentelemetry.shim.opentracing_shim import create_tracer
+
 trace.set_tracer_provider(
 TracerProvider(
         resource=Resource.create({SERVICE_NAME: "service_backend"})
     )
 )
-tracer = trace.get_tracer(__name__)
+#tracer = trace.get_tracer(__name__)
 jaeger_exporter = JaegerExporter(
     agent_host_name='localhost',
     agent_port=6831,
@@ -61,7 +63,8 @@ logger = logging.getLogger(__name__)
 
 #jaegerTracer = tracerConfig()
 #tracing = FlaskTracer(jaegerTracer, True, app)
-tracing = FlaskTracer(tracer, True, app)
+shim = create_tracer(trace)
+tracing = FlaskTracer(shim, True, app)
 
 app.config["MONGO_DBNAME"] = "example-mongodb"
 app.config[

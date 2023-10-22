@@ -18,3 +18,4 @@ opentelemetry-instrumentation-requests>=0.12b0
 opentelemetry-instrumentation>=0.12b0
 opentelemetry-sdk>=1.1.0
 prometheus-flask-exporter>=0.18.1
+opentelemetry-opentracing-shim>=0.2a0
