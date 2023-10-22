@@ -48,7 +48,8 @@ flask_tracer = FlaskTracing(tracer, True, app)
 
 @app.route("/")
 def homepage():
-    return render_template("main.html")
+    return "Hello World"
+    #return render_template("main.html")
 
 
 @app.route("/trace")
