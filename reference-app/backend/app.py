@@ -62,7 +62,7 @@ TracerProvider(
 #    agent_host_name='localhost',
 #    agent_port=6831,
 #)
-otlp_exporter = OTLPSpanExporter(endpoint="http://0.0.0.0:4317", insecure=True)
+otlp_exporter = OTLPSpanExporter(endpoint="http://jaeger:4317", insecure=True)
 span_processor = BatchSpanProcessor(otlp_exporter)
 trace.get_tracer_provider().add_span_processor(span_processor)
 shim = create_tracer(trace)
