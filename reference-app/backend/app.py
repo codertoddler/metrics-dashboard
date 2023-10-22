@@ -7,30 +7,50 @@ from flask_pymongo import PyMongo
 from flask_opentracing import FlaskTracer
 from jaeger_client import Config
 from jaeger_client.metrics.prometheus import PrometheusMetricsFactory
-from opentelemetry.instrumentation.flask import FlaskInstrumentor
-from opentelemetry.instrumentation.requests import RequestsInstrumentor
+#from opentelemetry.instrumentation.flask import FlaskInstrumentor
+#from opentelemetry.instrumentation.requests import RequestsInstrumentor
 from prometheus_flask_exporter import PrometheusMetrics
 
-# jaeger
-def tracerConfig():
-    config = Config(
-           config = {
-                'sampler': {
-                'type': 'const',
-                'param': 1,
-            },
-            'logging': True,
-            'local_agent': {'reporting_host': 'localhost'}
-        },
-        service_name="service_backend",
-        validate=True,
-        metrics_factory=PrometheusMetricsFactory(service_name_label="service_backend")
+from opentelemetry import trace
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.resources import SERVICE_NAME, Resource
+from opentelemetry.exporter.jaeger.thrift import JaegerExporter
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
+trace.set_tracer_provider(
+TracerProvider(
+        resource=Resource.create({SERVICE_NAME: "service_backend"})
     )
-    return config.initialize_tracer()
+)
+tracer = trace.get_tracer(__name__)
+jaeger_exporter = JaegerExporter(
+    agent_host_name='localhost',
+    agent_port=6831,
+)
+
+span_processor = BatchSpanProcessor(jaeger_exporter)
+
+trace.get_tracer_provider().add_span_processor(span_processor)
+
+# jaeger
+#def tracerConfig():
+#    config = Config(
+#           config = {
+#                'sampler': {
+#                'type': 'const',
+#                'param': 1,
+#            },
+#            'logging': True,
+#            'local_agent': {'reporting_host': 'localhost'}
+#        },
+#        service_name="service_backend",
+#        validate=True,
+#        metrics_factory=PrometheusMetricsFactory(service_name_label="service_backend")
+#    )
+#    return config.initialize_tracer()
 
 app = Flask(__name__)
-FlaskInstrumentor().instrument_app(app)
-RequestsInstrumentor().instrument()
+#FlaskInstrumentor().instrument_app(app)
+#RequestsInstrumentor().instrument()
 metrics = PrometheusMetrics(app)
 # static information as metric
 metrics.info("app_info", "Application info", version="1.0.3")
@@ -39,8 +59,9 @@ logging.getLogger("").handlers = []
 logging.basicConfig(format="%(message)s", level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-jaegerTracer = tracerConfig()
-tracing = FlaskTracer(jaegerTracer, True, app)
+#jaegerTracer = tracerConfig()
+#tracing = FlaskTracer(jaegerTracer, True, app)
+tracing = FlaskTracer(tracer, True, app)
 
 app.config["MONGO_DBNAME"] = "example-mongodb"
 app.config[
