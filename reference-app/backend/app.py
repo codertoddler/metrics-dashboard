@@ -59,7 +59,7 @@ TracerProvider(
 )
 #tracer = trace.get_tracer(__name__)
 jaeger_exporter = JaegerExporter(
-    agent_host_name='localhost',
+    agent_host_name='jaeger-agent.default.svc.cluster.local',
     agent_port=6831,
 )
 #otlp_exporter = OTLPSpanExporter(endpoint="http://jaeger:4317", insecure=True)
