@@ -91,6 +91,10 @@ def my_api():
     answer = "something"
     return jsonify(repsonse=answer)
 
+@app.route('/findtestrecord')
+def index():
+    return "Record not found", 400
+
 
 @app.route("/star", methods=["POST"])
 def add_star():
