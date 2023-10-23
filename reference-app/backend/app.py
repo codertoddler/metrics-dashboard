@@ -7,8 +7,6 @@ from flask_pymongo import PyMongo
 from flask_opentracing import FlaskTracer
 from jaeger_client import Config
 from jaeger_client.metrics.prometheus import PrometheusMetricsFactory
-#from opentelemetry.instrumentation.flask import FlaskInstrumentor
-#from opentelemetry.instrumentation.requests import RequestsInstrumentor
 from prometheus_flask_exporter import PrometheusMetrics
 
 from opentelemetry import trace
@@ -40,10 +38,7 @@ def tracerConfig():
     return config.initialize_tracer()
 
 app = Flask(__name__)
-#FlaskInstrumentor().instrument_app(app)
-#RequestsInstrumentor().instrument()
 metrics = PrometheusMetrics(app)
-# static information as metric
 metrics.info("app_info", "Application info", version="1.0.3")
 
 logging.getLogger("").handlers = []
@@ -52,22 +47,6 @@ logger = logging.getLogger(__name__)
 
 jaegerTracer = tracerConfig()
 tracing = FlaskTracer(jaegerTracer, True, app)
-
-#trace.set_tracer_provider(
-#TracerProvider(
-#        resource=Resource.create({SERVICE_NAME: "service_backend"})
-#    )
-#)
-#tracer = trace.get_tracer(__name__)
-#jaeger_exporter = JaegerExporter(
-#    agent_host_name='jaeger',
-#    agent_port=6831,
-#)
-#otlp_exporter = OTLPSpanExporter(endpoint="http://jaeger:4317", insecure=True)
-#span_processor = BatchSpanProcessor(jaeger_exporter)
-#trace.get_tracer_provider().add_span_processor(span_processor)
-#shim = create_tracer(trace)
-#tracing = FlaskTracer(shim, True, app)
 
 app.config["MONGO_DBNAME"] = "example-mongodb"
 app.config[

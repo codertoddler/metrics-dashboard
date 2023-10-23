@@ -4,7 +4,7 @@
 
 ## Setup the Jaeger and Prometheus source
 
-![grafana-prometheus-dashboard](./answer-img/grafana-homepage.png)
+![grafana-prometheus-dashboard](./answer-img/grafana-home-page.png)
 
 ## Create a Basic Dashboard
 
@@ -28,47 +28,65 @@
 
 ## Create a Dashboard to measure our SLIs
 
-![grafana-prometheus-dashboard](./answer-img/dashboard-services-uptime-http-status.png)
+![grafana-prometheus-dashboard](./answer-img/dashboard-services-uptime-http-status-new1.png)
 
 ## Tracing our Flask App
 
-![grafana-prometheus-dashboard](./answer-img/jaeger_trace_backend.png)
+![grafana-prometheus-dashboard](./answer-img/jaeger_trace_create_code.png)
+
+![grafana-prometheus-dashboard](./answer-img/jaeger_trace_span_code.png)
 
 ## Jaeger in Dashboards
-*TODO:* Now that the trace is running, let's add the metric to our current Grafana dashboard. Once this is completed, provide a screenshot of it here.
 
+![grafana-prometheus-dashboard](./answer-img/jaeger_trace_prometheus_dashboard.png)
 ## Report Error
-*TODO:* Using the template below, write a trouble ticket for the developers, to explain the errors that you are seeing (400, 500, latency) and to let them know the file that is causing the issue also include a screenshot of the tracer span to demonstrate how we can user a tracer to locate errors easily.
 
 TROUBLE TICKET
 
-Name:
+Name: Kishore 
 
-Date:
+Date: 8 OCT 2023
 
-Subject:
+Subject: Recent 400 errors faced by customers while using udagram app
 
-Affected Area:
+Affected Area: Image retrieval from Vendor Storage Portal
 
-Severity:
+Severity: High
 
-Description:
+Description: 
 
+- Customers weren't able to view images during last weekend. 
+- Upon analyzing the traces, we were able to find the root cause for these 400 errors. 
+ - Vendor Storage Portal 
+wasn't returning the images requested and these seems to be a problem with few records. 
+ - You can find the Trace span below where we were able to track down the issue to a back end service which talks to Vendor site in the findtestrecord end point. 
+ - As a corrective action, we have shared the failed image ids with the Vendor and the issue will be resolved in 2-3 days.
+
+![grafana-prometheus-dashboard](./answer-img/jaeger-span-400-issue.png)
 
 ## Creating SLIs and SLOs
 
- - Create a metric for 40x/50x error rate 
- - Create a metric for number of user requests returning 200
- - Create a metric for maintenance window in hours per weekend
- - Create a metric for number of db request failures per week
+For SLO guaranteeing that our application has a 99.95% uptime per month
+
+ - Measure the rate of user requests returning 200 
+ - Measure the 40x/50x error rate 
+ - Measure the latency of requests over time
+ - Measure the average time between failures
+ 
 
 ## Building KPIs for our plan
 
- - 40x/50x error rate is less than 5 per 10000 reqeusts
- - Number of user requests returning 200 shall be atleast 498 out of 500 requests
- - Maintenance hours per weekend shall be less than 2
- - Db request failures per week shall be 500 out of 10000
+ - Percentage of user requests returning 200 shall be 99.95 % over a day
+ - Quantile (0.95) of time to first byte for each request shall be under a milli second over a day
+ - Probe duration of the front and back end server shall be less than 10 ms over the span of a day
 
 
 ## Final Dashboard
-*TODO*: Create a Dashboard containing graphs that capture all the metrics of your KPIs and adequately representing your SLIs and SLOs. Include a screenshot of the dashboard here, and write a text description of what graphs are represented in the dashboard.  
+
+As mentioned in the KPIs, panels have been created to track the metrics using prometheus grafana stack for both front end and back end servers of our application
+
+- Up time panel to monitor percentage of user requests returning 200
+- Latency panel to monitor latency of each request i.e. time to first byte metric
+- Probe duration panel for monitoring the probe latency
+
+![grafana-prometheus-dashboard](./answer-img/grafana-application-sli.png)
