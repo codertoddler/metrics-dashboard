@@ -93,6 +93,8 @@ def my_api():
 
 @app.route('/findtestrecord')
 def index():
+    with jaegerTracer.start_span('Requesting Vendor site for record') as span:
+        span.log_kv({'event': 'Specified record not found in vendor site'})
     return "Record not found", 400
 
 
